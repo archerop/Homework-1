@@ -66,6 +66,26 @@ contract LiaoToken is IERC20 {
         return true;
     }
 
+    function transferFrom(address from, address to, uint256 value) external returns (bool) {
+        // TODO: please add your implementaiton here
+        address spender = msg.sender;
+        _spendAllowance(from, spender, value);
+        _transfer(from, to, value);
+        return true;
+    }
+
+    function approve(address spender, uint256 amount) external returns (bool) {
+        // TODO: please add your implementaiton here
+        address owner = msg.sender;
+        _approve(owner, spender, amount);
+        return true;
+    }
+
+    function allowance(address owner, address spender) public view returns (uint256) {
+        // TODO: please add your implementaiton here
+        return _allowances[owner][spender];
+    }
+
     function _transfer(address from, address to, uint256 amount) internal {
         if(from==address(0)){
             revert ("InvalidSender");
@@ -106,14 +126,6 @@ contract LiaoToken is IERC20 {
         emit Transfer(from, to, value);
     }
 
-    function transferFrom(address from, address to, uint256 value) external returns (bool) {
-        // TODO: please add your implementaiton here
-        address spender = msg.sender;
-        _spendAllowance(from, spender, value);
-        _transfer(from, to, value);
-        return true;
-    }
-
     function _spendAllowance(address owner, address spender, uint256 value) internal virtual {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
@@ -124,13 +136,6 @@ contract LiaoToken is IERC20 {
                 _approve(owner, spender, currentAllowance - value, false);
             }
         }
-    }
-
-    function approve(address spender, uint256 amount) external returns (bool) {
-        // TODO: please add your implementaiton here
-        address owner = msg.sender;
-        _approve(owner, spender, amount);
-        return true;
     }
 
     function _approve(address owner, address spender, uint256 value) internal {
@@ -148,10 +153,5 @@ contract LiaoToken is IERC20 {
         if (emitEvent) {
             emit Approval(owner, spender, value);
         }
-    }
-
-    function allowance(address owner, address spender) public view returns (uint256) {
-        // TODO: please add your implementaiton here
-        return _allowances[owner][spender];
     }
 }
